@@ -160,7 +160,9 @@ func HarGetWeather(msg model.Message) error {
 
 	json.Unmarshal(res, &wea)
 
-	response := "城市:" + wea.Result.Location.City +
+	response := "省份:" + wea.Result.Location.Province +
+		"\n城市:" + wea.Result.Location.City +
+		"\n地区:" + wea.Result.Location.Name +
 		"\n时间:" + time.Now().Format("2006/01/02") +
 		"\n天气:" + wea.Result.Now.Text +
 		"\n风向:" + wea.Result.Now.WindDir +
