@@ -135,6 +135,16 @@ func HarGetWeather(msg model.Message) error {
 
 	code := dao.GetCityCode(city)
 
+	if code == "" {
+		var r = []string{
+			"你要不试试范围小一点？",
+			"你你你再说一遍？",
+			"啥啥啥？",
+		}
+		rand.Seed(time.Now().Unix())
+		return HttpPrivateMsg(r[rand.Intn(len(r))], HarUserId)
+	}
+
 	url := "https://api.map.baidu.com/weather/v1/"
 
 	query := [][2]string{
@@ -156,19 +166,9 @@ func HarGetWeather(msg model.Message) error {
 
 	res, _ := io.ReadAll(resp.Body)
 
-	var wea model.WeatherResp
+	var wea = model.WeatherResp{}
 
 	json.Unmarshal(res, &wea)
-
-	if wea == (model.WeatherResp{}) {
-		var r = []string{
-			"你要不试试范围小一点？",
-			"你你你再说一遍？",
-			"啥啥啥？",
-		}
-		rand.Seed(time.Now().Unix())
-		return HttpPrivateMsg(r[rand.Intn(len(r))], HarUserId)
-	}
 
 	response := "省份:" + wea.Result.Location.Province +
 		"\n城市:" + wea.Result.Location.City +
