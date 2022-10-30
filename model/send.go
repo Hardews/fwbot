@@ -25,5 +25,20 @@ type Action struct {
 
 type Private struct {
 	UserId string `json:"user_id"`
-	Msg    string `json:"message"`
+	Msg    any    `json:"message"`
+}
+
+type QQFaceMsg struct {
+	Type string `json:"type"`
+	Data struct {
+		Id string `json:"id"`
+	} `json:"data"`
+}
+
+type MusicMsg struct {
+	Type string `json:"type"`
+	Data struct {
+		Type string `json:"type"`
+		Id   string `json:"id"`
+	} `json:"data"`
 }

@@ -10,9 +10,11 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
+	"fwbot/dao"
 	"fwbot/model"
+	"fwbot/util"
 	"io"
-	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -20,10 +22,22 @@ import (
 	"time"
 )
 
-var HarDefaultReturn = []string{
+var HarDefaultReturn = []any{
 	"真的吗真的吗",
 	"行吧",
 	"你说啥是啥",
+	model.QQFaceMsg{
+		Type: "face",
+		Data: struct {
+			Id string `json:"id"`
+		}{Id: "1"},
+	},
+	model.QQFaceMsg{
+		Type: "face",
+		Data: struct {
+			Id string `json:"id"`
+		}{Id: "110"},
+	},
 }
 
 const (
@@ -64,34 +78,26 @@ func HarDefaultFunc() error {
 }
 
 func HarGetSong(msg model.Message) error {
-	if !strings.HasPrefix(msg.Messages, HarSong) {
+	if !strings.HasPrefix(msg.Messages, HarSong) || len(msg.Messages) <= 7 {
 		return HarDefaultFunc()
 	}
 
-	var url = HarSongUrl + "/cloudsearch"
+	var (
+		resp   *http.Response
+		client = &http.Client{}
+	)
 
-	var req *http.Request
-	var resp *http.Response
-	var client = &http.Client{}
-
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-
-	q := req.URL.Query()
-	q.Add("keywords", msg.Messages[7:])
-	q.Add("limit", "1")
-	req.URL.RawQuery = q.Encode()
-
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36")
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Connection", "keep-alive")
-
-	resp, err = client.Do(req)
-	if err != nil {
-		log.Println("do req failed,err:", err)
-		return err
+	url := HarSongUrl + "/cloudsearch"
+	query := [][2]string{
+		{"keywords", msg.Messages[7:]},
+		{"limit", "1"},
 	}
 
-	defer resp.Body.Close()
+	resp, err := client.Do(util.Get(url, query))
+	if err != nil {
+		err = errors.New("do req failed,err:" + err.Error())
+		return err
+	}
 
 	res, _ := io.ReadAll(resp.Body)
 
@@ -116,6 +122,50 @@ func HarGetSong(msg model.Message) error {
 }
 
 func HarGetWeather(msg model.Message) error {
+	var city string
+	if !strings.HasPrefix(msg.Messages, HarWeather) {
+		return HarDefaultFunc()
+	}
+
+	if len(msg.Messages) <= 7 {
+		city = "重庆"
+	} else {
+		city = msg.Messages[7:]
+	}
+
+	code := dao.GetCityCode(city)
+
+	url := "https://api.map.baidu.com/weather/v1/"
+
+	query := [][2]string{
+		{"district_id", code},
+		{"data_type", "now"},
+		{"ak", "k4jy5w8xx6yfG76LvLhhmfjpIxzEZrlw"},
+	}
+
+	var (
+		resp   *http.Response
+		client = &http.Client{}
+	)
+
+	resp, err := client.Do(util.Get(url, query))
+	if err != nil {
+		err = errors.New("do req failed,err:" + err.Error())
+		return err
+	}
+
+	res, _ := io.ReadAll(resp.Body)
+
+	var wea model.WeatherResp
+
+	json.Unmarshal(res, &wea)
+
+	response := "城市:" + wea.Result.Location.City +
+		"\n时间:" + time.Now().Format("2006/01/02") +
+		"\n天气:" + wea.Result.Now.Text +
+		"\n风向:" + wea.Result.Now.WindDir +
+		"\n风力:" + wea.Result.Now.WindClass
+	WsPrivateMsg(response, HarUserId)
 
 	return nil
 }

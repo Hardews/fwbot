@@ -23,7 +23,7 @@ func HttpPrivateMsg(msg, userId string) error {
 }
 
 // WsPrivateMsg 通过WS发送私聊消息
-func WsPrivateMsg(msg, userId string) {
+func WsPrivateMsg(msg any, userId string) {
 	WChan <- model.Action{
 		Action: "send_private_msg",
 		Params: model.Private{
