@@ -8,9 +8,8 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"qq-bot/deal"
-	"qq-bot/model"
-	"qq-bot/send"
+	"fwbot/model"
+	"log"
 )
 
 // Classify 处理数据的函数
@@ -31,13 +30,21 @@ func Classify(msg []byte) {
 		json.Unmarshal(msg, &m)
 
 		// 这里打个样
-		switch m.UserId {
-		case 1225101127:
-			// 比如说是我发过来的信息
-			resp := deal.HarDealWithMsg(m)
+		// 为了保证代码简洁，所以这里采用这种方式，处理消息的方法统一放在deal层
+		// 以下代码改动应该只在map元素增添删减。
+		dealFunc, ok := map[int64]func(msg model.Message) error{
+			1225101127: HarDealWithMsg,
+		}[m.UserId]
+		if !ok {
+			log.Print(m.UserId)
+			log.Println(" 无此人的回复方法。")
+			return
+		}
 
-			err := send.SendPrivateMsg(resp, "1225101127")
-			fmt.Println(err)
+		err := dealFunc(m)
+		if err != nil {
+			log.Println("回复出错，err:", err)
+			return
 		}
 	case "request":
 	case "notice":

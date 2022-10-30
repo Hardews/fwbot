@@ -6,11 +6,16 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
+	"fwbot/model"
+	"github.com/gorilla/websocket"
 	"log"
 )
 
 var (
 	RChan chan []byte
+	WChan chan model.Action
 )
 
 func Reader() {
@@ -21,5 +26,18 @@ func Reader() {
 			return
 		}
 		RChan <- msg
+	}
+}
+
+func Writer() {
+	for true {
+		select {
+		case sendData := <-WChan:
+			res, err := json.Marshal(&sendData)
+			err = Conn.WriteMessage(websocket.TextMessage, res)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
 }

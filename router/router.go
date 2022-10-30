@@ -6,9 +6,9 @@
 package router
 
 import (
+	"fwbot/router/controller"
 	"github.com/gin-gonic/gin"
 	"log"
-	"qq-bot/router/controller"
 )
 
 func InitRouter() {

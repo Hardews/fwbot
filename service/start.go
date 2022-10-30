@@ -5,7 +5,10 @@
 
 package service
 
-import "github.com/gorilla/websocket"
+import (
+	"fwbot/model"
+	"github.com/gorilla/websocket"
+)
 
 var Conn *websocket.Conn
 
@@ -13,8 +16,10 @@ func Start(conn *websocket.Conn) {
 	Conn = conn
 
 	RChan = make(chan []byte)
+	WChan = make(chan model.Action)
 
 	go Reader()
+	go Writer()
 
 	for {
 		select {

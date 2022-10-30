@@ -6,7 +6,7 @@
 package main
 
 import (
-	"qq-bot/router"
+	"fwbot/router"
 )
 
 func main() {

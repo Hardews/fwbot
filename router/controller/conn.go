@@ -6,10 +6,10 @@
 package controller
 
 import (
+	"fwbot/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
-	"qq-bot/service"
 )
 
 var (
