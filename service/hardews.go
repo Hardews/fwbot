@@ -160,6 +160,16 @@ func HarGetWeather(msg model.Message) error {
 
 	json.Unmarshal(res, &wea)
 
+	if wea == (model.WeatherResp{}) {
+		var r = []string{
+			"你要不试试范围小一点？",
+			"你你你再说一遍？",
+			"啥啥啥？",
+		}
+		rand.Seed(time.Now().Unix())
+		return HttpPrivateMsg(r[rand.Intn(len(r))], HarUserId)
+	}
+
 	response := "省份:" + wea.Result.Location.Province +
 		"\n城市:" + wea.Result.Location.City +
 		"\n地区:" + wea.Result.Location.Name +
