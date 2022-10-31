@@ -8,11 +8,15 @@ package service
 import (
 	"fwbot/model"
 	"github.com/gorilla/websocket"
+	"math/rand"
+	"time"
 )
 
 var Conn *websocket.Conn
 
 func Start(conn *websocket.Conn) {
+	rand.Seed(time.Now().Unix())
+
 	Conn = conn
 
 	RChan = make(chan []byte)

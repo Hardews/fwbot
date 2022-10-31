@@ -34,10 +34,13 @@ func Classify(msg []byte) {
 		// 以下代码改动应该只在map元素增添删减。
 		dealFunc, ok := map[int64]func(msg model.Message) error{
 			1225101127: HarDealWithMsg,
+			3332648553: HarDealWithMsg,
 		}[m.UserId]
 		if !ok {
-			log.Print(m.UserId)
-			log.Println(" 无此人的回复方法。")
+			err := DealWithGeneralMsg(m)
+			if err != nil {
+				log.Println("回复出错，err:", err)
+			}
 			return
 		}
 
