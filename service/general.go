@@ -9,15 +9,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"fwbot/dao"
-	"fwbot/model"
-	"fwbot/util"
 	"io"
-	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"fwbot/dao"
+	"fwbot/model"
+	"fwbot/util"
 )
 
 var DefaultReturn = []any{}
@@ -42,17 +42,17 @@ func DealWithGeneralMsg(msg model.Message) error {
 		if strings.Contains(msg.Messages, s) {
 			dealFunc, ok := DealFuncMap[s]
 			if !ok {
-				return DefaultRespFunc()
+				return DefaultRespFunc(msg)
 			}
 			return dealFunc(msg)
 		}
 	}
 
-	return DefaultRespFunc()
+	return DefaultRespFunc(msg)
 }
 
-func DefaultRespFunc() error {
-	WsPrivateMsg(DefaultReturn[rand.Intn(len(DefaultReturn))], util.HarUserId)
+func DefaultRespFunc(msg model.Message) error {
+	WsPrivateMsg(DefaultReturn[util.RandNum(len(DefaultReturn))], util.Int64ToString(msg.UserId))
 	return nil
 }
 
@@ -67,7 +67,7 @@ func GetSong(msg model.Message) error {
 func SongTo(msg model.Message) error {
 	originalStr := strings.Split(msg.Messages, " ")
 	if (!strings.HasPrefix(msg.Messages, "给") && !strings.HasSuffix(msg.Messages, "点歌")) || len(originalStr) != 3 {
-		return DefaultRespFunc()
+		return DefaultRespFunc(msg)
 	}
 
 	username := strings.TrimSuffix(strings.TrimPrefix(originalStr[0], "给"), "点歌")
@@ -79,7 +79,7 @@ func SongTo(msg model.Message) error {
 			"我我我好像帮不了你捏？",
 			"啥啥啥？",
 		}
-		WsPrivateMsg(r[rand.Intn(len(r))], util.Int64ToString(msg.UserId))
+		WsPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
 		return nil
 	}
 
@@ -130,7 +130,7 @@ func parseSong(songName, userId, sendId string) error {
 func GetWeather(msg model.Message) error {
 	var city string
 	if !strings.HasPrefix(msg.Messages, Weather) {
-		return DefaultRespFunc()
+		return DefaultRespFunc(msg)
 	}
 
 	if len(msg.Messages) <= 7 {
@@ -147,7 +147,7 @@ func GetWeather(msg model.Message) error {
 			"你你你再说一遍？",
 			"啥啥啥？",
 		}
-		return HttpPrivateMsg(r[rand.Intn(len(r))], util.Int64ToString(msg.UserId))
+		return HttpPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
 	}
 
 	url := "https://api.map.baidu.com/weather/v1/"

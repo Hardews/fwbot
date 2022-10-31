@@ -9,8 +9,9 @@
 package service
 
 import (
-	"fwbot/model"
 	"strings"
+
+	"fwbot/model"
 )
 
 const (
@@ -29,7 +30,7 @@ func HarDealWithMsg(msg model.Message) error {
 		if strings.Contains(msg.Messages, s) {
 			dealFunc, ok := HarDealFuncMap[s]
 			if !ok {
-				return DefaultRespFunc()
+				return DefaultRespFunc(msg)
 			}
 			return dealFunc(msg)
 		}

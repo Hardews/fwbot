@@ -5,8 +5,17 @@
 
 package util
 
-import "strconv"
+import (
+	"math/rand"
+	"strconv"
+	"time"
+)
 
 func Int64ToString(i int64) string {
 	return strconv.FormatInt(i, 10)
+}
+
+func RandNum(n int) int {
+	rand.Seed(time.Now().Unix())
+	return rand.Intn(n)
 }
