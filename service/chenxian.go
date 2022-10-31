@@ -21,6 +21,10 @@ func XianSetCorn(msg model.Message) error {
 		return XianDefaultFunc()
 	}
 	res := strings.Split(msg.Messages, " ")
+	if len(res) != 3 {
+		WsPrivateMsg("输入有误", XianUserId)
+		return XianDefaultFunc()
+	}
 	task := res[1]
 	spec := res[2]
 	resp := task + "完成了吗"
