@@ -3,9 +3,7 @@ package service
 import (
 	"fwbot/model"
 	"github.com/robfig/cron/v3"
-	//"math/rand"
 	"strings"
-	//"time"
 )
 
 const (
