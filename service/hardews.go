@@ -9,6 +9,7 @@
 package service
 
 import (
+	"fwbot/util"
 	"strings"
 
 	"fwbot/model"
@@ -16,11 +17,15 @@ import (
 
 const (
 	HarSongUrl = "http://49.235.99.195:3000"
+	HarAddFace = "添加表情包"
 )
 
 var (
-	HarKeywordStr  = []string{}
-	HarDealFuncMap = map[string]func(msg model.Message) error{}
+	FaceStr        = []string{}
+	HarKeywordStr  = []string{HarAddFace}
+	HarDealFuncMap = map[string]func(msg model.Message) error{
+		HarAddFace: HarAddFaceFunc,
+	}
 )
 
 // HarDealWithMsg 处理lmh发来信息的函数
@@ -30,11 +35,26 @@ func HarDealWithMsg(msg model.Message) error {
 		if strings.Contains(msg.Messages, s) {
 			dealFunc, ok := HarDealFuncMap[s]
 			if !ok {
-				return DefaultRespFunc(msg)
+				return DefaultSelectFunc(msg)
 			}
 			return dealFunc(msg)
 		}
 	}
 
 	return DealWithGeneralMsg(msg)
+}
+
+func HarAddFaceFunc(msg model.Message) error {
+	if !strings.HasPrefix(msg.Messages, HarAddFace+"[CQ:image,file=") {
+		return DefaultSelectFunc(msg)
+	}
+
+	b := strings.Index(msg.Messages, "url=")
+	if b == -1 {
+		return DefaultSelectFunc(msg)
+	}
+
+	url := strings.Split(msg.Messages[b+4:len(msg.Messages)-1], "?")[0]
+	FaceStr = append(FaceStr, url)
+	return HttpPrivateMsg("添加成功！", util.Int64ToString(msg.UserId))
 }

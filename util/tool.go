@@ -16,6 +16,6 @@ func Int64ToString(i int64) string {
 }
 
 func RandNum(n int) int {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixMilli())
 	return rand.Intn(n)
 }

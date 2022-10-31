@@ -20,7 +20,11 @@ import (
 	"fwbot/util"
 )
 
-var DefaultReturn = []any{}
+var DefaultReturn = []any{
+	"啊这啊这",
+	"行吧行",
+	"ok",
+}
 
 const (
 	Song    = "点歌"
@@ -28,8 +32,9 @@ const (
 )
 
 var (
-	KeywordStr  = []string{Song, Weather}
-	DealFuncMap = map[string]func(msg model.Message) error{
+	DefaultReturnFunc = []func(msg model.Message) error{DefaultStrFunc, DefaultFaceFunc}
+	KeywordStr        = []string{Song, Weather}
+	DealFuncMap       = map[string]func(msg model.Message) error{
 		Song:    GetSong,
 		Weather: GetWeather,
 	}
@@ -42,18 +47,41 @@ func DealWithGeneralMsg(msg model.Message) error {
 		if strings.Contains(msg.Messages, s) {
 			dealFunc, ok := DealFuncMap[s]
 			if !ok {
-				return DefaultRespFunc(msg)
+				return DefaultSelectFunc(msg)
 			}
 			return dealFunc(msg)
 		}
 	}
 
-	return DefaultRespFunc(msg)
+	return DefaultSelectFunc(msg)
 }
 
-func DefaultRespFunc(msg model.Message) error {
+func DefaultSelectFunc(msg model.Message) error {
+	c := make(chan int)
+	go func() {
+		select {
+		case c <- 0:
+		case c <- 1:
+		}
+	}()
+
+	return DefaultReturnFunc[<-c](msg)
+}
+
+func DefaultStrFunc(msg model.Message) error {
 	WsPrivateMsg(DefaultReturn[util.RandNum(len(DefaultReturn))], util.Int64ToString(msg.UserId))
 	return nil
+}
+
+func DefaultFaceFunc(msg model.Message) error {
+	if len(FaceStr) == 0 {
+		return DefaultStrFunc(msg)
+	}
+	return SendFace(util.Int64ToString(msg.UserId), FaceStr[util.RandNum(len(FaceStr))])
+}
+
+func SendFace(userId, url string) error {
+	return HttpPrivateMsg("[CQ:image,file="+url+",type=show,value=1]", userId)
 }
 
 func GetSong(msg model.Message) error {
@@ -67,7 +95,7 @@ func GetSong(msg model.Message) error {
 func SongTo(msg model.Message) error {
 	originalStr := strings.Split(msg.Messages, " ")
 	if (!strings.HasPrefix(msg.Messages, "给") && !strings.HasSuffix(msg.Messages, "点歌")) || len(originalStr) != 3 {
-		return DefaultRespFunc(msg)
+		return DefaultSelectFunc(msg)
 	}
 
 	username := strings.TrimSuffix(strings.TrimPrefix(originalStr[0], "给"), "点歌")
@@ -130,7 +158,7 @@ func parseSong(songName, userId, sendId string) error {
 func GetWeather(msg model.Message) error {
 	var city string
 	if !strings.HasPrefix(msg.Messages, Weather) {
-		return DefaultRespFunc(msg)
+		return DefaultSelectFunc(msg)
 	}
 
 	if len(msg.Messages) <= 7 {

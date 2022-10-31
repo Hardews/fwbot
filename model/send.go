@@ -42,3 +42,12 @@ type MusicMsg struct {
 		Id   string `json:"id"`
 	} `json:"data"`
 }
+
+type FaceMsg struct {
+	Type string `json:"type"`
+	Data struct {
+		Type  string `json:"type"`
+		Url   string `json:"url"`
+		Value int    `json:"value"`
+	} `json:"data"`
+}
