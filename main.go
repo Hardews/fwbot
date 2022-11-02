@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	router.InitLog()
 	dao.InitDB()
 	router.InitRouter()
 }

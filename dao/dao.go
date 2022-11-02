@@ -16,7 +16,7 @@ var (
 )
 
 func InitDB() {
-	dsn := "root:lmh123@tcp(127.0.0.1:3306)/fwbot?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:lmh123@tcp(49.235.99.195/:3306)/fwbot?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("failed to connect database")
