@@ -28,28 +28,7 @@ var DefaultReturn = []any{
 
 var (
 	DefaultReturnFunc = []func(msg model.Message) error{DefaultStrFunc, DefaultFaceFunc}
-	KeywordStr        = []string{Song, Weather}
-	DealFuncMap       = map[string]func(msg model.Message) error{
-		Song:    GetSong,
-		Weather: GetWeather,
-	}
 )
-
-// DealWithGeneralMsg 处理没有私人定制的人发来信息的函数
-func DealWithGeneralMsg(msg model.Message) error {
-	// 打个样
-	for _, s := range KeywordStr {
-		if strings.Contains(msg.Messages, s) {
-			dealFunc, ok := DealFuncMap[s]
-			if !ok {
-				return DefaultSelectFunc(msg)
-			}
-			return dealFunc(msg)
-		}
-	}
-
-	return DefaultSelectFunc(msg)
-}
 
 func DefaultSelectFunc(msg model.Message) error {
 	c := make(chan int)
@@ -100,12 +79,12 @@ func SongTo(msg model.Message) error {
 		var r = []string{
 			"你要不试试给其他人点？？",
 			"我我我好像帮不了你捏？",
-			"啥啥啥？",
 		}
 		WsPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
 		return nil
 	}
 
+	HttpPrivateMsg("发送成功", util.Int64ToString(msg.UserId))
 	return parseSong(originalStr[1]+originalStr[2], userId, util.Int64ToString(msg.UserId))
 }
 
@@ -146,7 +125,6 @@ func parseSong(songName, userId, sendId string) error {
 
 	musicId = strconv.Itoa(jsonData.Result.Songs[0].Id)
 
-	HttpPrivateMsg("发送成功", sendId)
 	return HttpPrivateMsg("[CQ:music,type=163,id="+musicId+"]", userId)
 }
 
@@ -167,8 +145,6 @@ func GetWeather(msg model.Message) error {
 	if code == "" {
 		var r = []string{
 			"你要不试试范围小一点？",
-			"你你你再说一遍？",
-			"啥啥啥？",
 		}
 		return HttpPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
 	}

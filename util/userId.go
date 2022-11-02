@@ -7,7 +7,6 @@ package util
 
 const (
 	HarUserId = "1225101127"
-	YueUserId = "3253731034"
 	LenUserId = "3332648553"
 	VcUserId  = "3530327212"
 )
@@ -15,7 +14,7 @@ const (
 var (
 	RespMap = map[string]string{
 		"梁明海": HarUserId,
-		"梁升悦": YueUserId,
 		"陈思韵": LenUserId,
+		"vc":  VcUserId,
 	}
 )

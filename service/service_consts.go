@@ -6,10 +6,12 @@
 package service
 
 const (
-	base       = "http://49.235.99.195:8078" // http服务器地址
-	HarSongUrl = "http://49.235.99.195:3000"
-	Song       = "点歌"
-	Weather    = "天气"
-	XianCorn   = "定时任务"
-	HarAddFace = "添加表情包"
+	base        = "http://49.235.99.195:8078" // http服务器地址
+	HarSongUrl  = "http://49.235.99.195:3000"
+	Song        = "点歌"
+	Weather     = "天气"
+	XianCorn    = "定时任务"
+	HarAddFace  = "添加表情包"
+	XianGetTask = "清单"
+	XianDelTask = "删除任务"
 )

@@ -17,10 +17,14 @@ import (
 
 var (
 	FaceStr        = []string{}
-	HarKeywordStr  = []string{HarAddFace, XianCorn}
+	HarKeywordStr  = []string{Song, Weather, HarAddFace, XianCorn, XianGetTask, XianDelTask}
 	HarDealFuncMap = map[string]func(msg model.Message) error{
-		HarAddFace: HarAddFaceFunc,
-		XianCorn:   XianSetCorn,
+		Song:        GetSong,
+		Weather:     GetWeather,
+		HarAddFace:  HarAddFaceFunc,
+		XianCorn:    XianSetCorn,
+		XianGetTask: XianShowTasks,
+		XianDelTask: XianDelTaskFunc,
 	}
 )
 
@@ -37,7 +41,7 @@ func HarDealWithMsg(msg model.Message) error {
 		}
 	}
 
-	return DealWithGeneralMsg(msg)
+	return DefaultSelectFunc(msg)
 }
 
 func HarAddFaceFunc(msg model.Message) error {

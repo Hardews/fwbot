@@ -1,24 +1,23 @@
 package service
 
 import (
+	"fmt"
 	"fwbot/model"
 	"fwbot/util"
 	"github.com/robfig/cron/v3"
 	"log"
+	"strconv"
 	"strings"
 )
 
 var (
 	cr          *cron.Cron
+	taskMap     map[cron.EntryID]string
 	defaultTask = map[string]func(){
 		"* * 6 * * *":  func() { WsPrivateMsg("陈羡先生提醒您记得晨读和写德语练习册!", util.VcUserId) },
 		"* * 18 * * *": func() { WsPrivateMsg("陈羡先生提醒您记得背单词嗷", util.VcUserId) },
 	}
 )
-
-func init() {
-	cr = cron.New(cron.WithSeconds()) //withSeconds精确到秒
-}
 
 func XianSetCorn(msg model.Message) error {
 	if !strings.HasPrefix(msg.Messages, XianCorn) {
@@ -45,15 +44,16 @@ func XianSetCorn(msg model.Message) error {
 	}
 	spec = strings.TrimSuffix(spec, " ")
 
-	_, err := cr.AddFunc(spec, func() {
+	taskId, err := cr.AddFunc(spec, func() {
 		WsPrivateMsg(resp, util.Int64ToString(msg.UserId))
 	})
 	if err != nil {
 		return err
 	}
-	cr.Start()
 
+	taskMap[taskId] = task
 	//defer c.Stop() 关了还怎么执行
+
 	return nil
 }
 
@@ -67,4 +67,38 @@ func XianToVCDefaultFunc() {
 			continue
 		}
 	}
+}
+
+func XianShowTasks(msg model.Message) error {
+	if msg.Messages != "清单" {
+		return HarDealWithMsg(msg)
+	}
+
+	var res string
+	for id, task := range taskMap {
+		res += fmt.Sprintf("task id:%d,task name:%s\n", id, task)
+	}
+	res += "删除任务请通过task id删除"
+	WsPrivateMsg(res, util.Int64ToString(msg.UserId))
+	return nil
+}
+
+func XianDelTaskFunc(msg model.Message) error {
+	if !strings.HasPrefix(msg.Messages, "删除任务") {
+		return HarDealWithMsg(msg)
+	}
+
+	taskId, err := strconv.Atoi(msg.Messages[8:])
+	if err != nil {
+		return HarDealWithMsg(msg)
+	}
+
+	_, ok := taskMap[cron.EntryID(taskId)]
+	if !ok {
+		WsPrivateMsg("任务不存在", util.Int64ToString(msg.UserId))
+		return nil
+	}
+
+	delete(taskMap, cron.EntryID(taskId))
+	return nil
 }

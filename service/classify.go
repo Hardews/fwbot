@@ -8,6 +8,7 @@ package service
 import (
 	"encoding/json"
 	"fwbot/model"
+	"fwbot/util"
 	"log"
 )
 
@@ -33,12 +34,10 @@ func Classify(msg []byte) {
 		dealFunc, ok := map[int64]func(msg model.Message) error{
 			1225101127: HarDealWithMsg,
 			3332648553: HarDealWithMsg,
+			3530327212: HarDealWithMsg,
 		}[m.UserId]
 		if !ok {
-			err := DealWithGeneralMsg(m)
-			if err != nil {
-				log.Println("回复出错，err:", err)
-			}
+			WsPrivateMsg("我是私人定制机器人捏", util.Int64ToString(m.UserId))
 			return
 		}
 
