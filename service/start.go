@@ -18,6 +18,7 @@ func Start(conn *websocket.Conn) {
 	RChan = make(chan []byte)
 	WChan = make(chan model.Action)
 
+	go XianToVCDefaultFunc()
 	go Reader()
 	go Writer()
 

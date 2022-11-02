@@ -26,11 +26,6 @@ var DefaultReturn = []any{
 	"ok",
 }
 
-const (
-	Song    = "点歌"
-	Weather = "天气"
-)
-
 var (
 	DefaultReturnFunc = []func(msg model.Message) error{DefaultStrFunc, DefaultFaceFunc}
 	KeywordStr        = []string{Song, Weather}

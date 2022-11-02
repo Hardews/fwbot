@@ -15,11 +15,6 @@ import (
 	"fwbot/model"
 )
 
-const (
-	HarSongUrl = "http://49.235.99.195:3000"
-	HarAddFace = "添加表情包"
-)
-
 var (
 	FaceStr        = []string{}
 	HarKeywordStr  = []string{HarAddFace, XianCorn}

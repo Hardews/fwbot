@@ -12,8 +12,6 @@ import (
 	"net/http"
 )
 
-const base = "http://49.235.99.195:8078" // http服务器地址
-
 // HttpPrivateMsg 通过http发送私聊消息
 func HttpPrivateMsg(msg, userId string) error {
 	url := base + "/send_private_msg"

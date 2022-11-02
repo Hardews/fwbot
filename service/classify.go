@@ -7,7 +7,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"fwbot/model"
 	"log"
 )
@@ -21,7 +20,6 @@ func Classify(msg []byte) {
 	switch com.PostType {
 	case "meta_event":
 		// 元事件 类似心跳 目前设置的是30s
-		fmt.Println("pong")
 		break
 	case "message":
 		// 用户发送过来的消息
@@ -51,8 +49,5 @@ func Classify(msg []byte) {
 		}
 	case "request":
 	case "notice":
-		var m model.Message
-		json.Unmarshal(msg, &m)
-		fmt.Println(m)
 	}
 }
