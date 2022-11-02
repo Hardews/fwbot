@@ -6,13 +6,11 @@
 package main
 
 import (
-	"fwbot/bot"
 	"fwbot/dao"
 	"fwbot/router"
 )
 
 func main() {
-	go bot.Start()
 	router.InitLog()
 	dao.InitDB()
 	router.InitRouter()
