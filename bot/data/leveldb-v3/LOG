@@ -1,0 +1,26 @@
+=============== Nov 2, 2022 (CST) ===============
+22:29:48.670374 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+22:29:48.680268 db@open opening
+22:29:48.680268 version@stat F·[] S·0B[] Sc·[]
+22:29:48.681338 db@janitor F·2 G·0
+22:29:48.681338 db@open done T·1.0701ms
+=============== Nov 2, 2022 (CST) ===============
+22:31:15.555998 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+22:31:15.565473 version@stat F·[] S·0B[] Sc·[]
+22:31:15.565473 db@open opening
+22:31:15.565994 journal@recovery F·1
+22:31:15.565994 journal@recovery recovering @1
+22:31:15.568110 memdb@flush created L0@2 N·1 S·252B "s\x89\x8c\xd5,v1":"s\x89\x8c\xd5,v1"
+22:31:15.568640 version@stat F·[1] S·252B[252B] Sc·[0.25]
+22:31:15.571819 db@janitor F·3 G·0
+22:31:15.571819 db@open done T·6.346ms
+=============== Nov 2, 2022 (CST) ===============
+23:40:02.139132 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:40:02.157374 version@stat F·[1] S·252B[252B] Sc·[0.25]
+23:40:02.157374 db@open opening
+23:40:02.157374 journal@recovery F·1
+23:40:02.157374 journal@recovery recovering @3
+23:40:02.164183 memdb@flush created L0@5 N·25 S·1KiB "\x02*,R,v24":"\xec$M~,v26"
+23:40:02.164183 version@stat F·[2] S·1KiB[1KiB] Sc·[0.50]
+23:40:02.168186 db@janitor F·4 G·0
+23:40:02.168186 db@open done T·10.8119ms

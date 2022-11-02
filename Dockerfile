@@ -30,3 +30,4 @@ COPY --from=builder /build/fwbot /
 
 EXPOSE 8077
 ENTRYPOINT ["/fwbot"]
+
