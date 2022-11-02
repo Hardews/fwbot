@@ -70,8 +70,8 @@ func XianToVCDefaultFunc() {
 }
 
 func XianShowTasks(msg model.Message) error {
-	if msg.Messages != "清单" {
-		return HarDealWithMsg(msg)
+	if msg.Messages != XianGetTask {
+		return DefaultSelectFunc(msg)
 	}
 
 	var res string
@@ -84,13 +84,13 @@ func XianShowTasks(msg model.Message) error {
 }
 
 func XianDelTaskFunc(msg model.Message) error {
-	if !strings.HasPrefix(msg.Messages, "删除任务") {
-		return HarDealWithMsg(msg)
+	if !strings.HasPrefix(msg.Messages, XianDelTask) {
+		return DefaultSelectFunc(msg)
 	}
 
 	taskId, err := strconv.Atoi(msg.Messages[8:])
 	if err != nil {
-		return HarDealWithMsg(msg)
+		return DefaultSelectFunc(msg)
 	}
 
 	_, ok := taskMap[cron.EntryID(taskId)]
