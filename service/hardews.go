@@ -22,9 +22,10 @@ const (
 
 var (
 	FaceStr        = []string{}
-	HarKeywordStr  = []string{HarAddFace}
+	HarKeywordStr  = []string{HarAddFace, XianCorn}
 	HarDealFuncMap = map[string]func(msg model.Message) error{
 		HarAddFace: HarAddFaceFunc,
+		XianCorn:   XianSetCorn,
 	}
 )
 
