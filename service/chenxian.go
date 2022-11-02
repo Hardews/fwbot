@@ -12,10 +12,10 @@ import (
 
 var (
 	cr          *cron.Cron
-	taskMap     map[cron.EntryID]string
+	taskMap     = make(map[cron.EntryID]string)
 	defaultTask = map[string]func(){
-		"* * 6 * * *":  func() { WsPrivateMsg("陈羡先生提醒您记得晨读和写德语练习册!", util.VcUserId) },
-		"* * 18 * * *": func() { WsPrivateMsg("陈羡先生提醒您记得背单词嗷", util.VcUserId) },
+		"0 0 6 * * *":  func() { WsPrivateMsg("陈羡先生提醒您记得晨读和写德语练习册!", util.VcUserId) },
+		"0 0 18 * * *": func() { WsPrivateMsg("陈羡先生提醒您记得背单词嗷", util.VcUserId) },
 	}
 )
 
@@ -88,7 +88,7 @@ func XianDelTaskFunc(msg model.Message) error {
 		return DefaultSelectFunc(msg)
 	}
 
-	taskId, err := strconv.Atoi(msg.Messages[8:])
+	taskId, err := strconv.Atoi(msg.Messages[len(XianDelTask):])
 	if err != nil {
 		return DefaultSelectFunc(msg)
 	}
@@ -99,6 +99,7 @@ func XianDelTaskFunc(msg model.Message) error {
 		return nil
 	}
 
+	cr.Remove(cron.EntryID(taskId))
 	delete(taskMap, cron.EntryID(taskId))
 	return nil
 }
