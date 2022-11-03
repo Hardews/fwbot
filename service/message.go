@@ -13,19 +13,25 @@ import (
 	"strings"
 )
 
-const AddStr = "添加回复词"
+const (
+	AddStr     = "添加回复词"
+	AddKeyword = "添加关键字与回复词"
+)
 
 var (
-	KeywordStr  = []string{Song, Weather, AddFace, Corn, GetTask, DelTask, AddStr} // 存储相关关键词的切片
-	DealFuncMap = map[string]func(msg model.Message) error{                        // 存储相关词对应方法的map
-		Song:    GetSong,
-		Weather: GetWeather,
-		AddFace: AddFaceFunc,
-		Corn:    SetCorn,
-		GetTask: ShowTasks,
-		DelTask: DelTaskFunc,
-		AddStr:  AddDefaultReturnStr,
+	KeywordStr  = []string{Song, Weather, AddFace, Corn, GetTask, DelTask, AddStr, AddKeyword, Help} // 存储相关关键词的切片
+	DealFuncMap = map[string]func(msg model.Message) error{                                          // 存储相关词对应方法的map
+		Song:       GetSong,
+		Weather:    GetWeather,
+		AddFace:    AddFaceFunc,
+		Corn:       SetCorn,
+		GetTask:    ShowTasks,
+		DelTask:    DelTaskFunc,
+		AddStr:     AddDefaultReturnStr,
+		AddKeyword: AddKeywordAndReturn,
+		Help:       ShowHelp,
 	}
+	SelfDefinedMap = map[string][]string{} //自己定义的回复
 )
 
 // DealWithMsg 处理发来信息的函数
@@ -53,7 +59,12 @@ var DefaultReturn = []any{
 
 // DefaultSelectFunc 默认回复函数，不想改名所以用这个
 func DefaultSelectFunc(msg model.Message) error {
-	WsPrivateMsg(DefaultReturn[rand.Intn(len(DefaultReturn))], tool.Int64ToString(msg.UserId))
+	res, ok := SelfDefinedMap[msg.Messages]
+	if !ok {
+		WsPrivateMsg(DefaultReturn[rand.Intn(len(DefaultReturn))], tool.Int64ToString(msg.UserId))
+	} else {
+		WsPrivateMsg(res[rand.Intn(len(res))], tool.Int64ToString(msg.UserId))
+	}
 	return nil
 }
 
@@ -68,6 +79,38 @@ func AddDefaultReturnStr(msg model.Message) error {
 	}
 
 	DefaultReturn = append(DefaultReturn, res[1])
+	WsPrivateMsg("添加成功", tool.Int64ToString(msg.UserId))
+	return nil
+}
+
+func AddKeywordAndReturn(msg model.Message) error {
+	var res = strings.Split(msg.Messages, " ")
+	if strings.HasPrefix(msg.Messages, AddKeyword) && len(res) != 3 {
+		return DefaultSelectFunc(msg)
+	}
+
+	returnWords := strings.Split(res[2], "，")
+	for i, word := range returnWords {
+		// 如果是表情包则怎么处理
+		if strings.Contains(word, "[CQ:image") {
+			b := strings.Index(word, "url=")
+			if b == -1 {
+				return DefaultSelectFunc(msg)
+			}
+
+			url := strings.Split(word[b+4:len(word)-1], "?")[0]
+			returnWords[i] = "[CQ:image,file=" + url + ",type=show,value=1]"
+		}
+	}
+
+	// 查看之前是否有存储
+	bef, ok := SelfDefinedMap[res[1]]
+	if ok {
+		bef = append(bef, returnWords...)
+	} else {
+		SelfDefinedMap[res[1]] = returnWords
+	}
+
 	WsPrivateMsg("添加成功", tool.Int64ToString(msg.UserId))
 	return nil
 }
