@@ -106,7 +106,7 @@ func AddKeywordAndReturn(msg model.Message) error {
 	// 查看之前是否有存储
 	bef, ok := SelfDefinedMap[res[1]]
 	if ok {
-		bef = append(bef, returnWords...)
+		SelfDefinedMap[res[1]] = append(bef, returnWords...)
 	} else {
 		SelfDefinedMap[res[1]] = returnWords
 	}
