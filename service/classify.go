@@ -8,7 +8,7 @@ package service
 import (
 	"encoding/json"
 	"fwbot/model"
-	"fwbot/util"
+	"fwbot/tool"
 	"log"
 )
 
@@ -32,12 +32,12 @@ func Classify(msg []byte) {
 		// 为了保证代码简洁，所以这里采用这种方式，处理消息的方法统一放在deal层
 		// 以下代码改动应该只在map元素增添删减。
 		dealFunc, ok := map[int64]func(msg model.Message) error{
-			1225101127: HarDealWithMsg,
-			3332648553: HarDealWithMsg,
-			3530327212: HarDealWithMsg,
+			1225101127: DealWithMsg,
+			3332648553: DealWithMsg,
+			3530327212: DealWithMsg,
 		}[m.UserId]
 		if !ok {
-			WsPrivateMsg("我是私人定制机器人捏", util.Int64ToString(m.UserId))
+			WsPrivateMsg("我是私人定制机器人捏", tool.Int64ToString(m.UserId))
 			return
 		}
 
@@ -47,6 +47,10 @@ func Classify(msg []byte) {
 			return
 		}
 	case "request":
+		// 请求, 例如, 好友申请
+		// 后面再说这个加好友把，感觉没啥必要
 	case "notice":
+		// 通知，例如，群成员增加
+		// 也没啥用
 	}
 }

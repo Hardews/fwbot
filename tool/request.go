@@ -3,7 +3,7 @@
  * @Date: 2022/10/30 16:20
 **/
 
-package util
+package tool
 
 import (
 	"net/http"

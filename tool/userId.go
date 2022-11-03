@@ -3,7 +3,7 @@
  * @Date: 2022/10/31 20:05
 **/
 
-package util
+package tool
 
 const (
 	HarUserId = "1225101127"

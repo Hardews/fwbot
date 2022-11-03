@@ -1,26 +1,12 @@
 /**
  * @Author: Hardews
- * @Date: 2022/10/30 1:46
+ * @Date: 2022/11/3 11:38
+ * @Description:发送消息相关
 **/
-
-// 此包封装的是返回信息的函数
 
 package service
 
-import (
-	"fwbot/model"
-)
-
-/*
-全改用ws发送消息
-// HttpPrivateMsg 通过http发送私聊消息
-func HttpPrivateMsg(msg, userId string) error {
-	url := base + "/send_private_msg"
-
-	_, err := http.Get(url + "?user_id=" + userId + "&&message=" + msg)
-	return err
-}
-*/
+import "fwbot/model"
 
 // WsPrivateMsg 通过WS发送私聊消息
 func WsPrivateMsg(msg any, userId string) {
@@ -33,3 +19,16 @@ func WsPrivateMsg(msg any, userId string) {
 		Echo: "",
 	}
 }
+
+/*
+全改用ws发送消息
+base        = "http://127.0.0.1:8078" // http服务器地址
+
+// HttpPrivateMsg 通过http发送私聊消息
+func HttpPrivateMsg(msg, userId string) error {
+	url := base + "/send_private_msg"
+
+	_, err := http.Get(url + "?user_id=" + userId + "&&message=" + msg)
+	return err
+}
+*/

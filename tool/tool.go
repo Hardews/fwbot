@@ -3,7 +3,7 @@
  * @Date: 2022/10/31 20:23
 **/
 
-package util
+package tool
 
 import (
 	"math/rand"

@@ -6,9 +6,12 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
 	"fwbot/model"
 	"github.com/gorilla/websocket"
 	"github.com/robfig/cron/v3"
+	"log"
 )
 
 var Conn *websocket.Conn
@@ -30,6 +33,35 @@ func Start(conn *websocket.Conn) {
 		select {
 		case v := <-RChan:
 			Classify(v)
+		}
+	}
+}
+
+var (
+	RChan chan []byte
+	WChan chan model.Action
+)
+
+func Reader() {
+	for true {
+		_, msg, err := Conn.ReadMessage()
+		if err != nil {
+			log.Println("read err:", err)
+			return
+		}
+		RChan <- msg
+	}
+}
+
+func Writer() {
+	for true {
+		select {
+		case sendData := <-WChan:
+			res, err := json.Marshal(&sendData)
+			err = Conn.WriteMessage(websocket.TextMessage, res)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
