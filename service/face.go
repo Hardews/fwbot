@@ -32,7 +32,7 @@ func AddFaceFunc(msg model.Message) error {
 	}
 
 	url := strings.Split(msg.Messages[b+4:len(msg.Messages)-1], "?")[0]
-	FaceStr = append(FaceStr, url)
+	DefaultReturn = append(DefaultReturn, "[CQ:image,file="+url+",type=show,value=1]")
 	WsPrivateMsg("添加成功！", tool.Int64ToString(msg.UserId))
 	return nil
 }

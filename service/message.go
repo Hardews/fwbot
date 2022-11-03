@@ -9,19 +9,22 @@ package service
 import (
 	"fwbot/model"
 	"fwbot/tool"
+	"math/rand"
 	"strings"
 )
 
+const AddStr = "添加回复词"
+
 var (
-	FaceStr     = []string{}                                               // 存储表情包url的切片
-	KeywordStr  = []string{Song, Weather, AddFace, Corn, GetTask, DelTask} // 存储相关关键词的切片
-	DealFuncMap = map[string]func(msg model.Message) error{                // 存储相关词对应方法的map
+	KeywordStr  = []string{Song, Weather, AddFace, Corn, GetTask, DelTask, AddStr} // 存储相关关键词的切片
+	DealFuncMap = map[string]func(msg model.Message) error{                        // 存储相关词对应方法的map
 		Song:    GetSong,
 		Weather: GetWeather,
 		AddFace: AddFaceFunc,
 		Corn:    SetCorn,
 		GetTask: ShowTasks,
 		DelTask: DelTaskFunc,
+		AddStr:  AddDefaultReturnStr,
 	}
 )
 
@@ -44,10 +47,33 @@ func DealWithMsg(msg model.Message) error {
 
 // DefaultReturn 这里是一些默认的返回文字
 var DefaultReturn = []any{
-	"啊这啊这",
 	"行吧行",
 	"ok",
 }
+
+// DefaultSelectFunc 默认回复函数，不想改名所以用这个
+func DefaultSelectFunc(msg model.Message) error {
+	WsPrivateMsg(DefaultReturn[rand.Intn(len(DefaultReturn))], tool.Int64ToString(msg.UserId))
+	return nil
+}
+
+func AddDefaultReturnStr(msg model.Message) error {
+	if strings.HasPrefix(msg.Messages, AddStr) {
+		return DefaultSelectFunc(msg)
+	}
+
+	var res []string
+	if res = strings.Split(msg.Messages, " "); len(res) != 2 {
+		return DefaultSelectFunc(msg)
+	}
+
+	DefaultReturn = append(DefaultReturn, res[1])
+	WsPrivateMsg("添加成功", tool.Int64ToString(msg.UserId))
+	return nil
+}
+
+/*
+不当懒狗 决定改回来
 
 // DefaultReturnFunc 默认返回函数，其实可以变成一个,但是但是我懒得改了现在
 var (
@@ -78,3 +104,4 @@ func DefaultFaceFunc(msg model.Message) error {
 	}
 	return SendFace(tool.Int64ToString(msg.UserId), FaceStr[tool.RandNum(len(FaceStr))])
 }
+*/
