@@ -6,6 +6,7 @@
 package service
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fwbot/dao"
@@ -50,9 +51,14 @@ func GetWeather(msg model.Message) error {
 		{"ak", "k4jy5w8xx6yfG76LvLhhmfjpIxzEZrlw"},
 	}
 
+	// 忽略证书校验
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
 	var (
 		resp   *http.Response
-		client = &http.Client{}
+		client = &http.Client{Transport: tr}
 	)
 
 	resp, err := client.Do(tool.Get(WeatherUrl, query))
