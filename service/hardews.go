@@ -56,5 +56,6 @@ func HarAddFaceFunc(msg model.Message) error {
 
 	url := strings.Split(msg.Messages[b+4:len(msg.Messages)-1], "?")[0]
 	FaceStr = append(FaceStr, url)
-	return HttpPrivateMsg("添加成功！", util.Int64ToString(msg.UserId))
+	WsPrivateMsg("添加成功！", util.Int64ToString(msg.UserId))
+	return nil
 }

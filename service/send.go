@@ -9,9 +9,10 @@ package service
 
 import (
 	"fwbot/model"
-	"net/http"
 )
 
+/*
+全改用ws发送消息
 // HttpPrivateMsg 通过http发送私聊消息
 func HttpPrivateMsg(msg, userId string) error {
 	url := base + "/send_private_msg"
@@ -19,6 +20,7 @@ func HttpPrivateMsg(msg, userId string) error {
 	_, err := http.Get(url + "?user_id=" + userId + "&&message=" + msg)
 	return err
 }
+*/
 
 // WsPrivateMsg 通过WS发送私聊消息
 func WsPrivateMsg(msg any, userId string) {

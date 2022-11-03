@@ -28,7 +28,7 @@ func InitRouter() {
 }
 
 func InitLog() {
-	logFileName := flag.String("log", "./fwbot.log", "Log file name")
+	logFileName := flag.String("log", "/build/fwbot.log", "Log file name")
 	flag.Parse()
 
 	// 设置存储的路径

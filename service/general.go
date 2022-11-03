@@ -55,7 +55,8 @@ func DefaultFaceFunc(msg model.Message) error {
 }
 
 func SendFace(userId, url string) error {
-	return HttpPrivateMsg("[CQ:image,file="+url+",type=show,value=1]", userId)
+	WsPrivateMsg("[CQ:image,file="+url+",type=show,value=1]", userId)
+	return nil
 }
 
 func GetSong(msg model.Message) error {
@@ -82,9 +83,10 @@ func SongTo(msg model.Message) error {
 		}
 		WsPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
 		return nil
+
 	}
 
-	HttpPrivateMsg("发送成功", util.Int64ToString(msg.UserId))
+	WsPrivateMsg("发送成功", util.Int64ToString(msg.UserId))
 	return parseSong(originalStr[1]+originalStr[2], userId, util.Int64ToString(msg.UserId))
 }
 
@@ -125,7 +127,8 @@ func parseSong(songName, userId, sendId string) error {
 
 	musicId = strconv.Itoa(jsonData.Result.Songs[0].Id)
 
-	return HttpPrivateMsg("[CQ:music,type=163,id="+musicId+"]", userId)
+	WsPrivateMsg("[CQ:music,type=163,id="+musicId+"]", userId)
+	return nil
 }
 
 func GetWeather(msg model.Message) error {
@@ -146,7 +149,8 @@ func GetWeather(msg model.Message) error {
 		var r = []string{
 			"你要不试试范围小一点？",
 		}
-		return HttpPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
+		WsPrivateMsg(r[util.RandNum(len(r))], util.Int64ToString(msg.UserId))
+		return nil
 	}
 
 	url := "https://api.map.baidu.com/weather/v1/"
@@ -182,6 +186,5 @@ func GetWeather(msg model.Message) error {
 		"\n风向:" + wea.Result.Now.WindDir +
 		"\n风力:" + wea.Result.Now.WindClass
 	WsPrivateMsg(response, util.Int64ToString(msg.UserId))
-
 	return nil
 }
