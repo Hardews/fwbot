@@ -6,17 +6,11 @@
 package router
 
 import (
-	"flag"
-	"fmt"
-	"log"
-	"os"
-
 	"fwbot/router/controller"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
-
-const ProjectName = "fwbot"
 
 func InitRouter() {
 	engine := gin.Default()
@@ -27,20 +21,4 @@ func InitRouter() {
 	if err != nil {
 		log.Fatalln("run router failed,err:", err)
 	}
-}
-
-func InitLog() {
-	logFileName := flag.String("log", "/build/fwbot.log", "Log file name")
-	flag.Parse()
-
-	// 设置存储的路径
-	logFile, logErr := os.OpenFile(*logFileName, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
-	if logErr != nil {
-		fmt.Println("Fail to find", *logFile, "disk start Failed")
-		os.Exit(1)
-	}
-
-	log.SetOutput(logFile)
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	log.SetPrefix(ProjectName + ":")
 }
