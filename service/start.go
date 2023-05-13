@@ -8,24 +8,21 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"fwbot/model"
-	"github.com/gorilla/websocket"
-	"github.com/robfig/cron/v3"
 	"log"
+
+	"fwbot/model"
+
+	"github.com/gorilla/websocket"
 )
 
 var Conn *websocket.Conn
 
 func Start(conn *websocket.Conn) {
-	cr = cron.New(cron.WithSeconds()) //withSeconds精确到秒
-	cr.Start()
-
 	Conn = conn
 
 	RChan = make(chan []byte)
 	WChan = make(chan model.Action)
 
-	go XianToVCDefaultFunc()
 	go Reader()
 	go Writer()
 

@@ -5,11 +5,9 @@
 
 package dao
 
-import "fwbot/model"
-
-func InsertWeather(wea model.Weather) {
-	dB.Create(wea)
-}
+//func InsertWeather(wea model.Weather) {
+//	dB.Create(wea)
+//}
 
 func GetCityCode(cityName string) string {
 	var res string

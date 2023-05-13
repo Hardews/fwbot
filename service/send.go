@@ -21,7 +21,6 @@ func WsPrivateMsg(msg any, userId string) {
 }
 
 /*
-全改用ws发送消息
 base        = "http://127.0.0.1:8078" // http服务器地址
 
 // HttpPrivateMsg 通过http发送私聊消息

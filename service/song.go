@@ -8,13 +8,13 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"fwbot/model"
-	"fwbot/tool"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"fwbot/model"
+	"fwbot/tool"
 )
 
 const (
@@ -33,34 +33,23 @@ func GetSong(msg model.Message) error {
 		return SongTo(msg)
 	}
 
-	return parseSong(msg.Messages[7:], tool.HarUserId, tool.Int64ToString(msg.UserId))
+	return parseSong(msg.Messages[7:], tool.Int64ToString(msg.UserId))
 }
 
 // SongTo 处理给别人点歌
 func SongTo(msg model.Message) error {
 	originalStr := strings.Split(msg.Messages, " ")
 	if (!strings.HasPrefix(msg.Messages, "给") && !strings.HasSuffix(msg.Messages, "点歌")) || len(originalStr) != 3 {
-		return DefaultSelectFunc(msg)
+		return DefaultDealFunc(msg)
 	}
 
 	username := strings.TrimSuffix(strings.TrimPrefix(originalStr[0], "给"), "点歌")
-	fmt.Println(username)
-	userId, ok := tool.RespMap[username]
-	if !ok {
-		var r = []string{
-			"你要不试试给其他人点？？",
-			"我我我好像帮不了你捏？",
-		}
-		WsPrivateMsg(r[tool.RandNum(len(r))], tool.Int64ToString(msg.UserId))
-		return nil
-
-	}
 
 	WsPrivateMsg("发送成功", tool.Int64ToString(msg.UserId))
-	return parseSong(originalStr[1]+originalStr[2], userId, tool.Int64ToString(msg.UserId))
+	return parseSong(originalStr[1]+originalStr[2], username)
 }
 
-func parseSong(songName, userId, sendId string) error {
+func parseSong(songName, userId string) error {
 	var (
 		resp   *http.Response
 		client = &http.Client{}
@@ -78,7 +67,6 @@ func parseSong(songName, userId, sendId string) error {
 		WsPrivateMsg("点歌好像出现了一点错误捏，给你点一首我最爱的歌叭", userId)
 		WsPrivateMsg("[CQ:music,type=163,id=7214]", userId)
 		err = errors.New("do req failed,err:" + err.Error())
-		WsPrivateMsg("点歌好像出现了错误，err"+err.Error(), sendId)
 		return err
 	}
 

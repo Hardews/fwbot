@@ -7,9 +7,11 @@ package controller
 
 import (
 	"fwbot/service"
+
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"log"
 )
 
 var (

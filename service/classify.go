@@ -7,16 +7,15 @@ package service
 
 import (
 	"encoding/json"
-	"fwbot/model"
-	"fwbot/tool"
 	"log"
+
+	"fwbot/model"
 )
 
 // Classify 处理数据的函数
 func Classify(msg []byte) {
 	var com model.Com
 	json.Unmarshal(msg, &com)
-	//fmt.Println(string(msg))
 
 	switch com.PostType {
 	case "meta_event":
@@ -28,20 +27,7 @@ func Classify(msg []byte) {
 		var m model.Message
 		json.Unmarshal(msg, &m)
 
-		// 这里打个样
-		// 为了保证代码简洁，所以这里采用这种方式，处理消息的方法统一放在deal层
-		// 以下代码改动应该只在map元素增添删减。
-		dealFunc, ok := map[int64]func(msg model.Message) error{
-			1225101127: DealWithMsg,
-			3332648553: DealWithMsg,
-			3530327212: DealWithMsg,
-		}[m.UserId]
-		if !ok {
-			WsPrivateMsg("我是私人定制机器人捏", tool.Int64ToString(m.UserId))
-			return
-		}
-
-		err := dealFunc(m)
+		err := DealWithMsg(m)
 		if err != nil {
 			log.Println("回复出错，err:", err)
 			return

@@ -9,13 +9,14 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
-	"fwbot/dao"
-	"fwbot/model"
-	"fwbot/tool"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"fwbot/dao"
+	"fwbot/model"
+	"fwbot/tool"
 )
 
 const (
@@ -26,7 +27,7 @@ const (
 func GetWeather(msg model.Message) error {
 	var city string
 	if !strings.HasPrefix(msg.Messages, Weather) {
-		return DefaultSelectFunc(msg)
+		return DefaultDealFunc(msg)
 	}
 
 	if len(msg.Messages) <= 7 {

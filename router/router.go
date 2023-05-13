@@ -8,10 +8,12 @@ package router
 import (
 	"flag"
 	"fmt"
-	"fwbot/router/controller"
-	"github.com/gin-gonic/gin"
 	"log"
 	"os"
+
+	"fwbot/router/controller"
+
+	"github.com/gin-gonic/gin"
 )
 
 const ProjectName = "fwbot"
