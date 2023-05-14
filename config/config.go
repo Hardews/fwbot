@@ -16,8 +16,8 @@ import (
 var Config CONFIG
 
 type CONFIG struct {
-	Mysql
-	Gpt
+	Mysql `yaml:"mysql"`
+	Gpt   `yaml:"gpt"`
 }
 
 type Mysql struct {

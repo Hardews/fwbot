@@ -40,7 +40,6 @@ type accept struct {
 
 func GptSend(msg string) (result string, err error) {
 	var c = config.Config
-
 	// 用户设置 或 默认值
 	var r = role
 	if c.Role != "" {
