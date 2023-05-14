@@ -74,6 +74,8 @@ func GptSend(msg string) (result string, err error) {
 		return
 	}
 
+	fmt.Println(string(bodyByte))
+
 	body := strings.NewReader(string(bodyByte))
 
 	// 设置请求头
