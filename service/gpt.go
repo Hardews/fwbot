@@ -76,6 +76,7 @@ func GptSend(msg string) (result string, err error) {
 
 	// 设置请求头
 	req, err = http.NewRequest(http.MethodPost, url, bytes.NewBuffer(bodyByte))
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+c.ApiKey)
 	req.Header.Set("Accept", "application/json")
 	if c.Organization != "" {
