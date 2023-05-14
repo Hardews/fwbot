@@ -24,11 +24,11 @@ const (
 )
 
 type send struct {
-	Model    string
+	Model    string `json:"model,omitempty"`
 	Messages []struct {
-		Role    string
-		Content string
-	}
+		Role    string `json:"role,omitempty"`
+		Content string `json:"content,omitempty"`
+	} `json:"messages,omitempty"`
 }
 
 type accept struct {
@@ -56,11 +56,10 @@ func GptSend(msg string) (result string, err error) {
 	var s = send{
 		Model: model,
 		Messages: []struct {
-			Role    string
-			Content string
+			Role    string `json:"role,omitempty"`
+			Content string `json:"content,omitempty"`
 		}{{r, msg}},
 	}
-	fmt.Println(s)
 
 	var (
 		req    *http.Request
@@ -76,7 +75,6 @@ func GptSend(msg string) (result string, err error) {
 	}
 
 	body := strings.NewReader(string(bodyByte))
-	fmt.Println(body)
 
 	// 设置请求头
 	req, err = http.NewRequest(http.MethodPost, url, body)
