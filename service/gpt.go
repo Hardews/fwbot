@@ -10,7 +10,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"fwbot/config"
 	"io"
 	"net/http"
@@ -100,11 +99,9 @@ func GptSend(msg string) (result string, err error) {
 	}
 
 	var respMsg accept
-	fmt.Println(string(respBody))
 	// 解析
 	json.Unmarshal(respBody, &respMsg)
 
-	fmt.Println(respMsg)
 	if len(respMsg.Choices) == 0 {
 		return "报错咯", nil
 	}
