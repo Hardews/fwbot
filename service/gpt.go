@@ -101,7 +101,7 @@ func GptSend(msg string) (result string, err error) {
 	}
 
 	var respMsg accept
-
+	fmt.Println(string(respBody))
 	// 解析
 	json.Unmarshal(respBody, &respMsg)
 
