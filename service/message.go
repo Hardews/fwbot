@@ -8,6 +8,7 @@ package service
 
 import (
 	"fwbot/model"
+	"fwbot/tool"
 	"strings"
 )
 
@@ -38,6 +39,11 @@ func DealWithMsg(msg model.Message) error {
 
 // DefaultDealFunc 默认回复函数,调用 gpt
 func DefaultDealFunc(msg model.Message) error {
-	// TODO GPT 调用
+	res, err := GptSend(msg.Messages)
+	if err != nil {
+		return err
+	}
+
+	WsPrivateMsg(res, tool.Int64ToString(msg.UserId))
 	return nil
 }

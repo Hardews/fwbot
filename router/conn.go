@@ -3,7 +3,7 @@
  * @Date: 2022/10/30 0:55
 **/
 
-package controller
+package router
 
 import (
 	"fwbot/service"

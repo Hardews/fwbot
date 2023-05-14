@@ -6,6 +6,7 @@
 package dao
 
 import (
+	"fwbot/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -16,7 +17,12 @@ var (
 )
 
 func InitDB() {
-	dsn := "root:lmh123@tcp(49.235.99.195:3306)/fwbot?charset=utf8mb4&parseTime=True&loc=Local"
+	username := config.Config.Username
+	password := config.Config.Password
+	host := config.Config.Host
+	dbName := config.Config.DbName
+
+	dsn := username + ":" + password + "@tcp(" + host + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("failed to connect database")

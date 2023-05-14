@@ -1,0 +1,11 @@
+mysql:
+  host:'127.0.0.1:3306'
+  db-name:'fwbot'
+  username:'root'
+  password:''
+
+gpt:
+  api-key:''
+  organization:''
+  model:''
+  role:''

@@ -6,7 +6,6 @@
 package router
 
 import (
-	"fwbot/router/controller"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +14,7 @@ import (
 func InitRouter() {
 	engine := gin.Default()
 
-	engine.GET("/", controller.Connection)
+	engine.GET("/", Connection)
 
 	err := engine.Run(":8077")
 	if err != nil {
