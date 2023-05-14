@@ -9,6 +9,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"fwbot/config"
 	"io"
 	"net/http"
@@ -104,6 +105,10 @@ func GptSend(msg string) (result string, err error) {
 	// 解析
 	json.Unmarshal(respBody, &respMsg)
 
+	fmt.Println(respMsg)
+	if len(respMsg.Choices) == 0 {
+		return "报错咯", nil
+	}
 	// 返回
 	return respMsg.Choices[0].Message.Content, nil
 }
