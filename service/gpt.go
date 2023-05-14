@@ -7,13 +7,13 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"fwbot/config"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -74,12 +74,8 @@ func GptSend(msg string) (result string, err error) {
 		return
 	}
 
-	fmt.Println(string(bodyByte))
-
-	body := strings.NewReader(string(bodyByte))
-
 	// 设置请求头
-	req, err = http.NewRequest(http.MethodPost, url, body)
+	req, err = http.NewRequest(http.MethodPost, url, bytes.NewBuffer(bodyByte))
 	req.Header.Set("Authorization", "Bearer "+c.ApiKey)
 	req.Header.Set("Accept", "application/json")
 	if c.Organization != "" {
