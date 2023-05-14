@@ -60,6 +60,7 @@ func GptSend(msg string) (result string, err error) {
 			Content string
 		}{{r, msg}},
 	}
+	fmt.Println(s)
 
 	var (
 		req    *http.Request
@@ -68,13 +69,14 @@ func GptSend(msg string) (result string, err error) {
 	)
 
 	// 解析 body
-	bodyByte, err := json.Marshal(s)
+	bodyByte, err := json.Marshal(&s)
 	if err != nil {
 		err = errors.New("marshal body failed,err:" + err.Error())
 		return
 	}
 
 	body := strings.NewReader(string(bodyByte))
+	fmt.Println(body)
 
 	// 设置请求头
 	req, err = http.NewRequest(http.MethodPost, url, body)
