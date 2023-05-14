@@ -8,6 +8,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fwbot/config"
 	"io"
 	"net/http"
 	"strconv"
@@ -18,17 +19,21 @@ import (
 )
 
 const (
-	SongUrl = "http://49.235.99.195:3000"
-	Song    = "点歌"
+	Song = "点歌"
 )
+
+var SongUrl = config.Config.Url
 
 // GetSong 处理点歌的函数
 func GetSong(msg model.Message) error {
-	// 点歌的基本流程是，先处理用户的输入，然后从我部署在服务器的一个项目来获取歌曲的id，然后调用cq码来进行发送
+	// 点歌的基本流程是，先处理用户的输入，然后从部署在服务器的一个项目来获取歌曲的id，然后调用cq码来进行发送
 	// 一般来说如果出错了可能是服务器的项目毙掉了，然后我简单做了个处理。
 	// 这里讲一下，点歌的基本模板应该是 点歌 歌手信息 歌名（歌手信息可选）
 	// 给别人点歌的基本模板是 给xx点歌 歌手信息 歌名
-	// 这里通过判断前缀，如果前缀没有点歌，可能是给别人点歌或者说是不能理解的关键词，就同意调用给别人点歌来处理这部分。
+	// 这里通过判断前缀，如果前缀没有点歌，可能是给别人点歌或者说是不能理解的关键词，就统一调用给别人点歌来处理这部分。
+	if config.Config.Url == "" {
+		return DefaultDealFunc(msg)
+	}
 	if !strings.HasPrefix(msg.Messages, Song) || len(msg.Messages) <= len(Song+" ") {
 		return SongTo(msg)
 	}

@@ -9,6 +9,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fwbot/config"
 	"io"
 	"net/http"
 	"strings"
@@ -25,6 +26,10 @@ const (
 )
 
 func GetWeather(msg model.Message) error {
+	if config.Config.AK == "" {
+		return DefaultDealFunc(msg)
+	}
+
 	var city string
 	if !strings.HasPrefix(msg.Messages, Weather) {
 		return DefaultDealFunc(msg)
@@ -49,10 +54,10 @@ func GetWeather(msg model.Message) error {
 	query := [][2]string{
 		{"district_id", code},
 		{"data_type", "now"},
-		{"ak", "k4jy5w8xx6yfG76LvLhhmfjpIxzEZrlw"},
+		{"ak", config.Config.AK},
 	}
 
-	// 忽略证书校验
+	// 忽略证书校验,docker 中
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}

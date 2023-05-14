@@ -8,3 +8,7 @@ gpt:
   organization: ""
   model: ""
   role: ""
+song:
+  url: ""
+weather:
+  ak: ""

@@ -16,8 +16,10 @@ import (
 var Config CONFIG
 
 type CONFIG struct {
-	Mysql `yaml:"mysql"`
-	Gpt   `yaml:"gpt"`
+	Mysql   `yaml:"mysql"`
+	Gpt     `yaml:"gpt"`
+	Song    `yaml:"song"`
+	Weather `yaml:"weather"`
 }
 
 type Mysql struct {
@@ -32,6 +34,14 @@ type Gpt struct {
 	Organization string `yaml:"organization"`
 	Model        string `yaml:"model"`
 	Role         string `yaml:"role"`
+}
+
+type Song struct {
+	Url string `yaml:"url"`
+}
+
+type Weather struct {
+	AK string `yaml:"ak"`
 }
 
 func SetConfig() {
