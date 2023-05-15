@@ -1,14 +1,24 @@
 mysql:
-  host: "127.0.0.1:3306"
+  # 数据库地址
+  host: "127.0.0.1:3306" 
+  # 数据库名称
   db-name: "fwbot"
+  # 数据库用户名
   username: "root"
+  # 数据库密码
   password: ""
 gpt:
+  # openai 的 api key
   api-key: ""
+  # 组织编号 可选
   organization: ""
+  # 选用的模型，默认为 gpt-3.5-turbo
   model: ""
+  # 默认为 user
   role: ""
 song:
+  # 点歌歌曲 id 查询的 url
   url: ""
 weather:
+  # 百度 api 提供的 ak
   ak: ""
